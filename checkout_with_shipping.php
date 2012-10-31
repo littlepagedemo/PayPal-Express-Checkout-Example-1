@@ -41,7 +41,7 @@ if (isset($_REQUEST['PaymentOption']))
         //' by the shopping cart page
         //'------------------------------------
 
-        $paymentAmount =  $_SESSION['cart_item_total_amt'] + $shipping_amt;        
+        $paymentAmount =  $_SESSION['cart_item_total_amt'] + $shipping_amt + $tax_amt;        
         $_SESSION["Payment_Amount"] = $paymentAmount;
 
 } // else others payment options
@@ -60,14 +60,15 @@ if (isset($_REQUEST['PaymentOption']))
 	{
 
 		// Cart items
-		$payment_request = get_payment_request();
+		$padata = get_payment_request();
+		
 		$paymentAmount = $_SESSION["Payment_Amount"];	// from cart.php
 		
 		
 		//-------------------------------------------------
 		// Data to be sent to paypal - in SetExpressCheckout
 		//--------------------------------------------------
-		$shipping_data = '';
+		/*$shipping_data = '';
 		if($shipping_amt)
 				$shipping_data = '&PAYMENTREQUEST_0_SHIPPINGAMT='.urlencode($shipping_amt);
 				
@@ -77,7 +78,7 @@ if (isset($_REQUEST['PaymentOption']))
 		
 		$padata = 	$shipping_data.
 					$tax_data.					
-				 	$payment_request;				
+				 	$payment_request;	*/			
 		//echo '<br>padata='.$padata;			
 					
 					
@@ -96,8 +97,7 @@ if (isset($_REQUEST['PaymentOption']))
         	//' The CallMarkExpressCheckout function is defined in the file PayPalFunctions.php,
         	//' it is included at the top of this file.
         	//'-------------------------------------------------
-        	$resArray = CallMarkExpressCheckout ($paymentAmount, $PayPalCurrencyCode, $paymentType, $PayPalReturnURL, $PayPalCancelURL,
-                                            $shipToName, $shipToStreet, $shipToCity, $shipToState,
+        	$resArray = CallMarkExpressCheckout ($paymentAmount, $shipToName, $shipToStreet, $shipToCity, $shipToState,
                                             $shipToCountryCode, $shipToZip, $shipToStreet2, $phoneNum, $padata
         	);
 		

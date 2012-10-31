@@ -43,7 +43,7 @@ include_once("config.php");
 	*/	
 	
 	$tax_amt = '0';		// no tax amount
-	//$tax_amt = '2.00';	// or Flat rate
+	$tax_amt = '2.00';	// or Flat rate
 
 	//-------------------------------------------	
 	// Check cart item exits
@@ -75,7 +75,7 @@ include_once("config.php");
 				if ($c[2] == $ItemNumber){					
 					$c[4] += $ItemQty;
 					$c[5] += $ItemQty * $c[3];
-					$c_arr[] = array($c[0], $c[1], $c[2], $c[3], $c[4], number_format($c[5],2));
+					$c_arr[] = array($c[0], $c[1], $c[2], $c[3], $c[4], $c[5]);
 				}else
 					$c_arr[] = $c;	
 			}
@@ -177,19 +177,21 @@ include_once("config.php");
 	'       padata:				cart items details, shipping amt and tax amount
 	'--------------------------------------------------------------------------------------------------------------------------------------------	
 	*/
-	function CallMarkExpressCheckout( $paymentAmount, $currencyCodeType, $paymentType, $returnURL, 
-									  $cancelURL, $shipToName, $shipToStreet, $shipToCity, $shipToState,
+	function CallMarkExpressCheckout( $paymentAmount, $shipToName, $shipToStreet, $shipToCity, $shipToState,
 									  $shipToCountryCode, $shipToZip, $shipToStreet2, $phoneNum, $padata
 									) 
 	{
+		global $PayPalCurrencyCode, $paymentType, $PayPalReturnURL, $PayPalCancelURL;
+		global $shipping_amt, $tax_amt;
+		
 		//------------------------------------------------------------------------------------------------------------------------------------
 		// Construct the parameter string that describes the SetExpressCheckout API call in the shortcut implementation
 		
 		$nvpstr="&PAYMENTREQUEST_0_AMT=". $paymentAmount;
 		$nvpstr = $nvpstr . "&PAYMENTREQUEST_0_PAYMENTACTION=" . $paymentType;
-		$nvpstr = $nvpstr . "&RETURNURL=" . $returnURL;
-		$nvpstr = $nvpstr . "&CANCELURL=" . $cancelURL;
-		$nvpstr = $nvpstr . "&PAYMENTREQUEST_0_CURRENCYCODE=" . $currencyCodeType;
+		$nvpstr = $nvpstr . "&RETURNURL=" . $PayPalReturnURL;
+		$nvpstr = $nvpstr . "&CANCELURL=" . $PayPalCancelURL;
+		$nvpstr = $nvpstr . "&PAYMENTREQUEST_0_CURRENCYCODE=" . $PayPalCurrencyCode;
 		
 		
 		$nvpstr = $nvpstr . "&ADDROVERRIDE=1";		// To override the shipping address stored on PayPal
@@ -202,6 +204,12 @@ include_once("config.php");
 		$nvpstr = $nvpstr . "&PAYMENTREQUEST_0_SHIPTOZIP=" . $shipToZip;
 		$nvpstr = $nvpstr . "&PAYMENTREQUEST_0_SHIPTOPHONENUM=" . $phoneNum;
 
+		if($shipping_amt > 0)
+			$nvpstr = $nvpstr . '&PAYMENTREQUEST_0_SHIPPINGAMT='.urlencode($shipping_amt);
+
+		if($tax_amt > 0)
+			$nvpstr = $nvpstr . '&PAYMENTREQUEST_0_TAXAMT='.urlencode($tax_amt);
+			
 		$nvpstr = $nvpstr . '&ALLOWNOTE=1';		
 		$nvpstr = $nvpstr . $padata;		
 		//echo '<br>nvpstr='.$nvpstr;
