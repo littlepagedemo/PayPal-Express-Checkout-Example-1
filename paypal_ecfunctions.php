@@ -288,8 +288,10 @@ include_once("config.php");
 	'		The NVP Collection object of the DoExpressCheckoutPayment Call Response.
 	'--------------------------------------------------------------------------------------------------------------------------------------------	
 	*/
-	function ConfirmPayment( $FinalPaymentAmt, $currencyCodeType, $paymentType )
+	function ConfirmPayment( $FinalPaymentAmt)
 	{
+		global $PayPalCurrencyCode, $paymentType;
+	
 		/* 	Gather the information to make the final call tofinalize the PayPal payment. 
 			The variable nvpstr holds the name value pairs		  
 		*/
@@ -306,7 +308,7 @@ include_once("config.php");
 					'&PAYERID=' . $payerID . 
 					'&PAYMENTREQUEST_0_PAYMENTACTION=' . $paymentType . 
 					'&PAYMENTREQUEST_0_AMT=' . $FinalPaymentAmt;
-		$nvpstr .=  '&PAYMENTREQUEST_0_CURRENCYCODE=' . $currencyCodeType . 
+		$nvpstr .=  '&PAYMENTREQUEST_0_CURRENCYCODE=' . $PayPalCurrencyCode . 
 					'&IPADDRESS=' . $serverName; 
 
 
