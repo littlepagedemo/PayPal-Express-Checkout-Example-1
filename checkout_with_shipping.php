@@ -59,27 +59,10 @@ if (isset($_REQUEST['PaymentOption']))
 	if ($_SESSION['cart_item_arr']) 
 	{
 
-		// Cart items
+		// Data to be sent to paypal - in SetExpressCheckout
 		$padata = get_payment_request();
 		
-		$paymentAmount = $_SESSION["Payment_Amount"];	// from cart.php
-		
-		
-		//-------------------------------------------------
-		// Data to be sent to paypal - in SetExpressCheckout
-		//--------------------------------------------------
-		/*$shipping_data = '';
-		if($shipping_amt)
-				$shipping_data = '&PAYMENTREQUEST_0_SHIPPINGAMT='.urlencode($shipping_amt);
-				
-		$tax_data = '';
-		if($tax_amt)
-				$tax_data = '&PAYMENTREQUEST_0_TAXAMT='.urlencode($tax_amt);		
-		
-		$padata = 	$shipping_data.
-					$tax_data.					
-				 	$payment_request;	*/			
-		//echo '<br>padata='.$padata;			
+		$paymentAmount = $_SESSION["Payment_Amount"];	// from cart.php			
 					
 					
 		//'--------------------------------------------------------------------		
